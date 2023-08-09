@@ -22,4 +22,10 @@ RUN ash -c "set -o pipefail && curl -L \
 
 WORKDIR /src
 
+COPY orgdocs .
+
 EXPOSE 1313
+
+HEALTHCHECK CMD curl --fail http://localhost:1313 || exit 1
+
+CMD ["hugo", "server", "-w", "--bind=0.0.0.0"]
