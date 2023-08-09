@@ -13,6 +13,7 @@ WORKDIR /usr/local/src
 RUN ash -c "set -o pipefail && curl -L \
       https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_linux-64bit.tar.gz -o hugo_${VERSION}_linux-64bit.tar.gz https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_checksums.txt -o checksums.txt \
       && cat checksums.txt \
+      && [[ `sha256sum hugo_0.64.0_Linux-64bit.tar.gz` == `awk '$2 == "hugo_0.64.0_Linux-64bit.tar.gz" { print $1 }' hugo_0.64.0_checksums.txt` ]] \
       && tar -xzf hugo_${VERSION}_linux-64bit.tar.gz \
     && mv hugo /usr/local/bin/hugo \
     && addgroup -Sg 1000 hugo \
