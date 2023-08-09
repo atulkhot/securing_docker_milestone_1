@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.18.3
 
 LABEL org.opencontainers.image.authors="psellars@gmail.com"
 
