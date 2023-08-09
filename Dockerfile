@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-MAINTAINER PS <psellars@gmail.com>
+LABEL org.opencontainers.image.authors="psellars@gmail.com"
 
 RUN apk add --no-cache \
     curl \
