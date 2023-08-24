@@ -1,6 +1,8 @@
-FROM alpine:3.18.3
+ARG ALPINE_VERSION=3.11.5
 
-LABEL org.opencontainers.image.authors="psellars@gmail.com"
+FROM alpine:${ALPINE_VERSION}
+
+LABEL maintainer="psellars@gmail.com"
 
 RUN apk add --no-cache \
     curl \
@@ -9,25 +11,28 @@ RUN apk add --no-cache \
     rsync
 
 ENV VERSION 0.64.0
-WORKDIR /usr/local/src
-RUN ash -c "set -o pipefail && curl -L \
-      https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_linux-64bit.tar.gz -o hugo_${VERSION}_linux-64bit.tar.gz \
-      && curl -L https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_checksums.txt -o hugo_${VERSION}_checksums.txt \
-      && sha256sum hugo_${VERSION}_linux-64bit.tar.gz | cut -d ' ' -f1 > c1.txt \
-      && egrep hugo_${VERSION}_Linux-64bit.tar.gz hugo_${VERSION}_checksums.txt | cut -d ' ' -f1 > c2.txt \
-      && cmp c1.txt c2.txt \
-      && tar -xzf hugo_${VERSION}_linux-64bit.tar.gz \
-      && mv hugo /usr/local/bin/hugo \
-      && addgroup -Sg 1000 hugo \
-      && adduser -SG hugo -u 1000 -h /src hugo"
- 
-WORKDIR /src
 
-COPY orgdocs .
+WORKDIR /usr/local/src
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
+RUN wget \
+  https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz
+
+RUN wget \
+  https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_checksums.txt \
+    && sed -i '/hugo_[0-9].*Linux-64bit.tar.gz/!d' \
+       hugo_${VERSION}_checksums.txt \
+    && sha256sum -cs hugo_${VERSION}_checksums.txt \
+    && tar -xzvf hugo_"${VERSION}"_Linux-64bit.tar.gz \
+    && mv hugo /usr/local/bin/hugo \
+    && addgroup -Sg 1000 hugo \
+    && adduser -SG hugo -u 1000 -h /src hugo
+
+USER hugo
+
+WORKDIR /src
 
 EXPOSE 1313
 
-HEALTHCHECK CMD curl --fail http://localhost:1313 || exit 1
-
-CMD ["hugo", "server", "-w", "--bind=0.0.0.0"]
-# CMD ["/bin/ash"]
+HEALTHCHECK --interval=10s --timeout=10s --start-period=15s \
+  CMD hugo env || exit 1

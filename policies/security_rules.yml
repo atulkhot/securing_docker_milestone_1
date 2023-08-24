@@ -3,7 +3,26 @@ profile:
   name: "Security Rules"
   description: "Set of rules focus on security aspects of Dockerfiles"
 
+required_instructions:
+  -
+    instruction: "USER"
+    count: 1
+    level: "warn"
+    message: "No USER defined"
+    description: "USER is needed for..."
+
 line_rules:
+
+  USER:
+    paramSyntaxRegex: /.+/
+    rules:
+      -
+        label: "no_run_with_root_user"
+        regex: /^(ROOT|root)$/
+        level: "warn"
+        required: true
+        message: "Container is running with root user privileges"
+        description: "Well designed systems adhere to the principle of least privilege. Run as non-privileged user "
 
   ADD:
     paramSyntaxRegex: /^~?([\w-.~:/?#\[\]\\\/*@!$&'()*+,;=.{}"]+[\s]*)+$/
