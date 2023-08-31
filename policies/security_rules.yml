@@ -13,6 +13,26 @@ required_instructions:
 
 line_rules:
 
+  FROM:
+    paramSyntaxRegex: /.+/
+    rules:
+      -
+        label: "no_base_image_with_tag_latest"
+        regex: /^[^:]+:latest$/
+        level: "error"
+        required: true
+        message: "Base image should not be from latest tag"
+        description: "Latest tag is a moving target - image should baseline from a known tag - to ensure predictable behavior"
+
+      -
+        label: "no_base_image_with_implied_latest_tag"
+        regex: /^[^:]+$/
+        level: "error"
+        required: true
+        message: "No tag implies latest tag"
+        description: "Latest tag is a moving target - image should baseline from a known tag - to ensure predictable behavior"
+        
+
   USER:
     paramSyntaxRegex: /.+/
     rules:

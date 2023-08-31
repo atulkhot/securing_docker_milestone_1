@@ -1,6 +1,7 @@
 ARG ALPINE_VERSION=3.11.5
 
 FROM alpine:${ALPINE_VERSION}
+# FROM alpine
 
 LABEL maintainer="psellars@gmail.com"
 
