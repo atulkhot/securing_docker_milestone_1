@@ -11,6 +11,14 @@ required_instructions:
     message: "No USER defined"
     description: "USER is needed for..."
 
+  -
+    instruction: "LABEL"
+    count: 1
+    level: "error"
+    message: "No LABEL defined"
+    description: "LABEL is needed for identifying the maintainer of the image"
+    
+
 line_rules:
 
   FROM:
@@ -31,7 +39,15 @@ line_rules:
         required: true
         message: "No tag implies latest tag"
         description: "Latest tag is a moving target - image should baseline from a known tag - to ensure predictable behavior"
-        
+
+  LABEL:
+    defined_namevals:
+      maintainer:
+        level: "error"
+        message: "Maintainer needs to be specified"
+        required: true
+        valueRegex: /.+@.+/
+    paramSyntaxRegex: /^.+/
 
   USER:
     paramSyntaxRegex: /.+/

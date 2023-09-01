@@ -4,6 +4,7 @@ FROM alpine:${ALPINE_VERSION}
 # FROM alpine
 
 LABEL maintainer="psellars@gmail.com"
+LABEL xx=yyy
 
 RUN apk add --no-cache \
     curl \
