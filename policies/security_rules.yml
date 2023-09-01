@@ -17,6 +17,14 @@ required_instructions:
     level: "error"
     message: "No LABEL defined"
     description: "LABEL is needed for identifying the maintainer of the image"
+
+  -
+    instruction: "HEALTHCHECK"
+    count: 1
+    level: "error"
+    message: "No HEALTHCHECK defined"
+    description: "HEALTHCHECK is needed for ensuring the container is healthy"
+
     
 
 line_rules:
@@ -48,6 +56,16 @@ line_rules:
         required: true
         valueRegex: /.+@.+/
     paramSyntaxRegex: /^.+/
+
+  HEALTHCHECK:
+    paramSyntaxRegex: /.+/
+    rules:
+      - label: "health_check_no_curl"
+        regex: /(^|\s+)curl\s+/
+        level: "error"
+        required: true
+        message: "curl should not be used for checking health of a container"
+        description: "Health check using curl is a bad security practice"
 
   USER:
     paramSyntaxRegex: /.+/
