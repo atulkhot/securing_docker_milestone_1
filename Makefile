@@ -12,6 +12,9 @@ lint:
 	@echo "Linting the Hugo Builder container..."
 	@docker run --rm -i hadolint/hadolint:v1.17.5-alpine \
         hadolint --ignore DL3018 - < Dockerfile
+	@docker run --rm -v $(PWD):/root/ \
+           projectatomic/dockerfile-lint \
+           dockerfile_lint -r ./policies/security_rules.yml
 	@echo "Linting completed!"
 
 #hugo_build:
