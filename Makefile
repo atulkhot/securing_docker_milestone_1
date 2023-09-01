@@ -61,5 +61,9 @@ inspect_labels:
         hugo_server
 	@echo "Labels inspected!"
 
+run_security_scan:
+	@echo "Running the clair security scanner"
+	@/home/atul/go/bin/clair-scanner --ip 192.168.1.39 lp/hugo-builder
+
 .PHONY: build lint hugo_build start_server check_health stop_server \
   inspect_labels
